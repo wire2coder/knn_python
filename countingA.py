@@ -1,11 +1,15 @@
-# Python 2.7
+## Important Requirement
+## Python 2.7
+## Pyspark
+## Java 8
+
 
 import timeit # for timing the program execution time
 from pyspark import SparkContext
 
 
-# logFile = "43.txt" # 160KB
-logFile = "warPeaceBig.txt" # 1GB
+logFile = "43.txt" # 160KB
+# logFile = "warPeaceBig.txt" # 1GB
 
 
 # sc = SparkContext("local", "first app") << this line DOES NOT WORK
