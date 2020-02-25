@@ -3,11 +3,47 @@
     Pythong 2.7
     PySpark 2
     Java 8
+
+    'k-nearest neigbors' on the Iris Flowers Dataset
  """
 
+import timeit               
 from pyspark import SparkContext
 from math import sqrt
-import timeit # for timing the program execution time
+from random import seed
+from random import randrange
+from csv import reader
+
+
+# Load a  CSV file
+def load_csv(filename):
+
+    dataset = list()
+    with open(filename, 'r') as file:
+        csv_reader = reader(file)   # >> 'file reader' object
+        
+        for row in csv_reader:
+            if not row:
+                continue    # >> exit the 'for loop'
+
+            dataset.append(row)
+        
+    return dataset    
+    
+
+# Convert 'string colum' to float numbers
+def str_column_to_float(dataset, column):
+
+    for row in dataset:
+        # print(row[column])                  # print the value of colum 1, colum 2 of each row
+        row[column] = float( row[column] )  # strip() take out all empty spaces
+        # print( "after", type(row[column]))
+
+
+# Convert 'string colum' to integer numbers        
+def str_column_to_int(dataset, column):
+    here 2/25/2020
+    
 
 
 """ Step 1, calculate the Euclidean distance between '2 vectors' """
@@ -15,12 +51,12 @@ def euclidean_distance(row1, row2):
     distance = 0.0
     
     for i in range( len(row1)-1 ): # >> 3-1 = 2
+
         distance = distance + ( row1[i] - row2[i] )**2
     return sqrt(distance)
 
 
 """ Step 2: Get the Nearest Neighbor """
-
 def get_neighbors(train, test_row, num_neighbors):
     distances = list()    
 
@@ -28,6 +64,7 @@ def get_neighbors(train, test_row, num_neighbors):
         dist = euclidean_distance(test_row, train_row)
         distances.append( (train_row, dist) )
     
+
     # debugging
     print("_____________________")
     print("distances LIST")
@@ -42,15 +79,51 @@ def get_neighbors(train, test_row, num_neighbors):
     for asdf in distances:
         print(asdf)
     print("_____________________")
+    
 
-
-    # here 2/24/2020
     neighbors = list()
-
     for i in range( num_neighbors ):
         neighbors.append( distances[i][0] )
     
     return neighbors
+
+
+""" 
+    Step 3: Make Predictions
+        'Prediction' refers to the output of an algorithm 
+"""
+def predict_classification(train, test_row, num_neighbors):
+
+    neighbors = get_neighbors(train, test_row, num_neighbors)
+
+    # using "zip" to print 3 'nearest neighbor'
+    print("___3 'nearest neighbor'_____")
+    for asdf in zip(neighbors):
+        print(asdf)
+    print("_____________________")
+
+
+    output_values = [row[-1] for row in neighbors]
+    # print(output_values) # >> [0,0,0] print the last COLUM in each ROW
+    # jim = set(output_values)
+    # print( jim )
+
+    # max() find the largest value in 'iterable'
+    ## key=output_values.count
+    ## COUNT the number is data that OCCUR the most
+
+    # set() convert 'iterable' to SET theory
+    ## The list before conversion is : [3, 4, 1, 4, 5]
+    ## The list after conversion is : {1, 3, 4, 5}
+
+    prediction = max( set(output_values), key=output_values.count )
+    print("___'prediction'_____")
+    print(prediction)
+    print("_____________________")
+
+
+    return prediction
+
 
 
 # Test distance function
@@ -85,14 +158,24 @@ print("_____________________")
 #     distance = euclidean_distance(row0, row_asdf)   # calculating the "straight line distance"
 #     print(distance) # printing the "stright line distance" of row0 to ALL other rows, including row0 to row0
 
-# for asdf in dataset:
-#     print(asdf)
+
+# prediction = predict_classification(dataset, dataset[0], 3)
+# print('Expected %d, Got (prediction) %d.' % (dataset[0][-1], prediction) )
+    
+
+# Make a 'prediction' with KNN on Iris Dataset    
+filename = 'iris.csv'    
+load_csv(filename)
 
 
-neighbors = get_neighbors(dataset, dataset[0], 3)
-# print(neighbors)
+for i in range( len(dataset[0])-1 ):    # >> length of dataset[0] - 1 is 2 | range(2) >> value 0,1
+    # print(i)
+    str_column_to_float(dataset, i)
 
+# convert class colum integers
 
-# for asdf in neighbors:
-#     print(asdf)
+# define model parameter
 
+# define a new record
+
+# predict the label
