@@ -1,11 +1,17 @@
 """ 
     Importatnt Requirement
-    Pythong 2.7
+    Pythong 2.7, Pythong 3
     PySpark 2
     Java 8
 
     'k-nearest neigbors' on the Iris Flowers Dataset
  """
+
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np  # 'library' for dealing with BIG 'data set'
+
+from sklearn.ensemble import RandomForestClassifier
 
 import timeit               
 from pyspark import SparkContext
@@ -14,6 +20,25 @@ from random import seed
 from random import randrange
 from csv import reader
 
+### Section, extra code
+def simpleGraph():
+    # Data for plotting
+    t = np.arange(0.0, 2.0, 0.01)
+    s = 1 + np.sin(2 * np.pi * t)
+
+    fig, ax = plt.subplots()
+    ax.plot(t, s)
+
+
+    ax.set(xlabel='time (s)', ylabel='voltage (mV)',
+        title='About as simple as it gets, folks')
+    ax.grid()
+
+    fig.savefig("test.png")
+    plt.show()
+
+
+### Section, main program
 
 # Load a  CSV file
 def load_csv(filename):
@@ -41,9 +66,47 @@ def str_column_to_float(dataset, column):
 
 
 # Convert 'string colum' to integer numbers        
-def str_column_to_int(dataset, column):
-    here 2/25/2020
+def str_column_to_int(dataset, column):    
+    class_values = [ row[column] for row in dataset ]
+    unique = set(class_values) # converting values to 'SET'
+
+    # print("class_values", class_values)
+    # print("unique", unique)
+
+    lookup = dict() # make a new 'dictionary'
+    # print( list(enumerate(  unique)) )  # >> [(0,0)(1,1)] >> (counter, data)
+
+    for i, value in enumerate(unique):   
+        lookup[value] = i
     
+    for row in dataset:        
+        row[column] = lookup[ row[column] ]  # adding values to 'dictionary'
+        
+    # print("lookup", lookup)
+    return lookup
+    
+# Convert string column to integer
+def dataset_minmax(dataset):
+    minmax = list() # make a new 'list'
+    for i in range( len(dataset[0]) ):  # the length of the first row of dataset is 3, from 0 - 2
+        col_values = [ row[i] for row in dataset ]
+        value_min = min(col_values)
+        value_max = max(col_values)
+
+        minmax.append( [value_min, value_max] ) # adding data to the 'list'
+    
+    return minmax
+
+
+# Rescale dataset column to the range 0-1
+def normalize_dataset(dataset, minmax):
+    for row in dataset:
+        for i in range( len(row) ):
+            row[i] = ( row[i] - minmax[i][0] / minmax[i][1] - minmax[i][0] )
+
+
+# Split a dataset into k folds
+# here
 
 
 """ Step 1, calculate the Euclidean distance between '2 vectors' """
@@ -97,7 +160,7 @@ def predict_classification(train, test_row, num_neighbors):
     neighbors = get_neighbors(train, test_row, num_neighbors)
 
     # using "zip" to print 3 'nearest neighbor'
-    print("___3 'nearest neighbor'_____")
+    print("____'nearest neighbor'_____")
     for asdf in zip(neighbors):
         print(asdf)
     print("_____________________")
@@ -105,8 +168,6 @@ def predict_classification(train, test_row, num_neighbors):
 
     output_values = [row[-1] for row in neighbors]
     # print(output_values) # >> [0,0,0] print the last COLUM in each ROW
-    # jim = set(output_values)
-    # print( jim )
 
     # max() find the largest value in 'iterable'
     ## key=output_values.count
@@ -117,6 +178,7 @@ def predict_classification(train, test_row, num_neighbors):
     ## The list after conversion is : {1, 3, 4, 5}
 
     prediction = max( set(output_values), key=output_values.count )
+    here, try to understand the 'max( set(output_values), key=output_values.count )'
     print("___'prediction'_____")
     print(prediction)
     print("_____________________")
@@ -159,23 +221,31 @@ print("_____________________")
 #     print(distance) # printing the "stright line distance" of row0 to ALL other rows, including row0 to row0
 
 
-# prediction = predict_classification(dataset, dataset[0], 3)
-# print('Expected %d, Got (prediction) %d.' % (dataset[0][-1], prediction) )
+## Section, stuff to show Dr.Shi
+def showDrshi():
+    prediction = predict_classification(dataset, dataset[0], 3)
+    print('Expected %d, Got (prediction) %d.' % (dataset[0][-1], prediction) )
     
+showDrshi()
+
 
 # Make a 'prediction' with KNN on Iris Dataset    
 filename = 'iris.csv'    
 load_csv(filename)
 
-
 for i in range( len(dataset[0])-1 ):    # >> length of dataset[0] - 1 is 2 | range(2) >> value 0,1
     # print(i)
+    # convert class colum to floats
     str_column_to_float(dataset, i)
 
-# convert class colum integers
+
+# convert class colum to integers
+str_column_to_int(dataset, len(dataset[0])-1 )
 
 # define model parameter
 
 # define a new record
 
 # predict the label
+
+
