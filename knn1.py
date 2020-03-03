@@ -7,11 +7,10 @@
     'k-nearest neigbors' on the Iris Flowers Dataset
  """
 
-import matplotlib
-import matplotlib.pyplot as plt
+# import matplotlib
+# import matplotlib.pyplot as plt
 import numpy as np  # 'library' for dealing with BIG 'data set'
 
-from sklearn.ensemble import RandomForestClassifier
 
 import timeit               
 from pyspark import SparkContext
@@ -105,8 +104,21 @@ def normalize_dataset(dataset, minmax):
             row[i] = ( row[i] - minmax[i][0] / minmax[i][1] - minmax[i][0] )
 
 
-# Split a dataset into k folds
-# here
+# Split dataset into 'k folds'
+def cross_validation_split(dataset, n_folds)
+    dataset_split = list()
+    dataset_copy = list(dataset)
+
+    fold_size = int( len(dataset) /n_folds )
+
+    for here
+
+
+# Calculate accuracy percentage
+#here 3/3/2020
+
+# Evaluate an algorithm using a cross validation split
+#here 3/3/2020
 
 
 """ Step 1, calculate the Euclidean distance between '2 vectors' """
@@ -178,7 +190,7 @@ def predict_classification(train, test_row, num_neighbors):
     ## The list after conversion is : {1, 3, 4, 5}
 
     prediction = max( set(output_values), key=output_values.count )
-    here, try to understand the 'max( set(output_values), key=output_values.count )'
+    # here, try to understand the 'max( set(output_values), key=output_values.count )'
     print("___'prediction'_____")
     print(prediction)
     print("_____________________")
@@ -223,8 +235,10 @@ print("_____________________")
 
 ## Section, stuff to show Dr.Shi
 def showDrshi():
+    # change dataset[0] to dataset[5]
+
     prediction = predict_classification(dataset, dataset[0], 3)
-    print('Expected %d, Got (prediction) %d.' % (dataset[0][-1], prediction) )
+    print('Expected "type" (in original dataset) %d, Got (calculated prediction) %d.' % (dataset[0][-1], prediction) )
     
 showDrshi()
 
@@ -240,12 +254,16 @@ for i in range( len(dataset[0])-1 ):    # >> length of dataset[0] - 1 is 2 | ran
 
 
 # convert class colum to integers
-str_column_to_int(dataset, len(dataset[0])-1 )
+af1 = str_column_to_int(dataset, len(dataset[0])-1 )
+print("lookup dictionary", af1)
 
-# define model parameter
+# evaluate algorithm
+n_folds = 5
+num_neighbors = 5
 
-# define a new record
+evaluate_algorithm(dataset, k_nearest_neightbors, n_folds, num_neighbors)
+print('Scores: %s' % scores )
+print('Mean Acccuracy: %.3f%%' % (sum(scores)/float(len(scores))) )
 
-# predict the label
 
 

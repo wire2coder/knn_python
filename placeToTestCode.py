@@ -20,3 +20,9 @@ e1 = enumerate(l1)
 
 # print(type(e1))     # >> enumerate
 # print( list(e1) )   # [(0, 'eat'), (1, 'sleep'), (2, 'repeat')]
+
+
+# Usually however, it's used to show we don't care about it's value. For example:
+# It's considered appropriate here because we arnt using the value, we want to do something unrelated 10 times.
+for _ in range(5):
+    print("what")
