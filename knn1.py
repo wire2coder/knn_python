@@ -4,266 +4,69 @@
     PySpark 2
     Java 8
 
-    'k-nearest neigbors' on the Iris Flowers Dataset
+    'k-nearest neigbors' 
+    https://towardsdatascience.com/machine-learning-basics-with-the-k-nearest-neighbors-algorithm-6a6e71d01761
  """
 
-# import matplotlib
-# import matplotlib.pyplot as plt
-import numpy as np  # 'library' for dealing with BIG 'data set'
+from collections import Counter
+import math
 
 
-import timeit               
-from pyspark import SparkContext
-from math import sqrt
-from random import seed
-from random import randrange
-from csv import reader
+def knn(data, query, k, distancce_fn, choice_fn):
+    # making a new 'list'
+    neighbor_distance_and_indices = []
 
-### Section, extra code
-def simpleGraph():
-    # Data for plotting
-    t = np.arange(0.0, 2.0, 0.01)
-    s = 1 + np.sin(2 * np.pi * t)
+    # 3. for each 'example' in the data
+    for index, example in enumerate(data):
+        # 3.1 calculate the distance between the '' and ''
+        distance = distance_fn(example[:-1], query)
 
-    fig, ax = plt.subplots()
-    ax.plot(t, s)
+        # 3.2 and the distance to the 'list'
+        neighbor_distance_and_indices.append( (distance, index) )
 
+        # 4 /sort/ the 'list' from smallest to largest
+        sorted_neighbor_distances_and_indices = sorted(neighbor_distance_and_indices)
 
-    ax.set(xlabel='time (s)', ylabel='voltage (mV)',
-        title='About as simple as it gets, folks')
-    ax.grid()
+        # 5 pick the first 'K'
+        k_nearest_distances_and_indices = sorted_neighbor_distances_and_indices[:k]
 
-    fig.savefig("test.png")
-    plt.show()
+        # 6 get the 'lable' of the 'K' << here, what is this line doing????
+        k_nearest_lables = [ data[i][1] for distance, i in k_nearest_distances_and_indices ]
 
-
-### Section, main program
-
-# Load a  CSV file
-def load_csv(filename):
-
-    dataset = list()
-    with open(filename, 'r') as file:
-        csv_reader = reader(file)   # >> 'file reader' object
-        
-        for row in csv_reader:
-            if not row:
-                continue    # >> exit the 'for loop'
-
-            dataset.append(row)
-        
-    return dataset    
-    
-
-# Convert 'string colum' to float numbers
-def str_column_to_float(dataset, column):
-
-    for row in dataset:
-        # print(row[column])                  # print the value of colum 1, colum 2 of each row
-        row[column] = float( row[column] )  # strip() take out all empty spaces
-        # print( "after", type(row[column]))
+        # 7. If regression (choice_fn = mean), return the average of the K labels
+        # 8. If classification (choice_fn = mode), return the mode of the K labels
+        return k_nearest_distances_and_indices, choice_fn(k_nearest_lables)
 
 
-# Convert 'string colum' to integer numbers        
-def str_column_to_int(dataset, column):    
-    class_values = [ row[column] for row in dataset ]
-    unique = set(class_values) # converting values to 'SET'
+def main():
 
-    # print("class_values", class_values)
-    # print("unique", unique)
+    '''
+    # Regression Data
+    # 
+    # Column 0: height (inches)
+    # Column 1: weight (pounds)
+    '''
 
-    lookup = dict() # make a new 'dictionary'
-    # print( list(enumerate(  unique)) )  # >> [(0,0)(1,1)] >> (counter, data)
-
-    for i, value in enumerate(unique):   
-        lookup[value] = i
-    
-    for row in dataset:        
-        row[column] = lookup[ row[column] ]  # adding values to 'dictionary'
-        
-    # print("lookup", lookup)
-    return lookup
-    
-# Convert string column to integer
-def dataset_minmax(dataset):
-    minmax = list() # make a new 'list'
-    for i in range( len(dataset[0]) ):  # the length of the first row of dataset is 3, from 0 - 2
-        col_values = [ row[i] for row in dataset ]
-        value_min = min(col_values)
-        value_max = max(col_values)
-
-        minmax.append( [value_min, value_max] ) # adding data to the 'list'
-    
-    return minmax
-
-
-# Rescale dataset column to the range 0-1
-def normalize_dataset(dataset, minmax):
-    for row in dataset:
-        for i in range( len(row) ):
-            row[i] = ( row[i] - minmax[i][0] / minmax[i][1] - minmax[i][0] )
-
-
-# Split dataset into 'k folds'
-def cross_validation_split(dataset, n_folds)
-    dataset_split = list()
-    dataset_copy = list(dataset)
-
-    fold_size = int( len(dataset) /n_folds )
-
-    for here
-
-
-# Calculate accuracy percentage
-#here 3/3/2020
-
-# Evaluate an algorithm using a cross validation split
-#here 3/3/2020
-
-
-""" Step 1, calculate the Euclidean distance between '2 vectors' """
-def euclidean_distance(row1, row2):
-    distance = 0.0
-    
-    for i in range( len(row1)-1 ): # >> 3-1 = 2
-
-        distance = distance + ( row1[i] - row2[i] )**2
-    return sqrt(distance)
-
-
-""" Step 2: Get the Nearest Neighbor """
-def get_neighbors(train, test_row, num_neighbors):
-    distances = list()    
-
-    for train_row in train:
-        dist = euclidean_distance(test_row, train_row)
-        distances.append( (train_row, dist) )
-    
-
-    # debugging
-    print("_____________________")
-    print("distances LIST")
-    for asdf in distances:
-        print(asdf)
-    print("_____________________")
-
-    ### check point
-    distances.sort( key=lambda tup: tup[1])
-    print("_____________________")
-    print("distances LIST SORT by Euclidean_distance")
-    for asdf in distances:
-        print(asdf)
-    print("_____________________")
-    
-
-    neighbors = list()
-    for i in range( num_neighbors ):
-        neighbors.append( distances[i][0] )
-    
-    return neighbors
-
-
-""" 
-    Step 3: Make Predictions
-        'Prediction' refers to the output of an algorithm 
-"""
-def predict_classification(train, test_row, num_neighbors):
-
-    neighbors = get_neighbors(train, test_row, num_neighbors)
-
-    # using "zip" to print 3 'nearest neighbor'
-    print("____'nearest neighbor'_____")
-    for asdf in zip(neighbors):
-        print(asdf)
-    print("_____________________")
-
-
-    output_values = [row[-1] for row in neighbors]
-    # print(output_values) # >> [0,0,0] print the last COLUM in each ROW
-
-    # max() find the largest value in 'iterable'
-    ## key=output_values.count
-    ## COUNT the number is data that OCCUR the most
-
-    # set() convert 'iterable' to SET theory
-    ## The list before conversion is : [3, 4, 1, 4, 5]
-    ## The list after conversion is : {1, 3, 4, 5}
-
-    prediction = max( set(output_values), key=output_values.count )
-    # here, try to understand the 'max( set(output_values), key=output_values.count )'
-    print("___'prediction'_____")
-    print(prediction)
-    print("_____________________")
-
-
-    return prediction
-
-
-
-# Test distance function
-dataset = [
-    [2.7810836,2.550537003,0],          # row 0, with 3 colums           
-	[1.465489372,2.362125076,0],        # row 1, with 3 colums
-	[3.396561688,4.400293529,0],        # row 2, with 3 colums
-	[1.38807019,1.850220317,0],         # row 3, with 3 colums
-	[3.06407232,3.005305973,0],         # row 4, with 3 colums
-	[7.627531214,2.759262235,1],        # row 5, with 3 colums
-	[5.332441248,2.088626775,1],        # row 6, with 3 colums
-	[6.922596716,1.77106367,1],         # row 7, with 3 colums
-	[8.675418651,-0.242068655,1],       # row 8, with 3 colums
-	[7.673756466,3.508563011,1]         # row 9, with 3 colums
+    reg_data = [
+       [65.75, 112.99],
+       [71.52, 136.49],
+       [69.40, 153.03],
+       [68.22, 142.34],
+       [67.79, 144.30],
+       [68.70, 123.30],
+       [69.80, 141.49],
+       [70.01, 136.46],
+       [67.90, 112.37],
+       [66.49, 127.45],
     ]
 
+    # Question:
+    # Given the data we have, what's the best-guess at someone's weight if they are 60 inches tall?
+    reg_query = [60]
+    reg_k_neareset_neighbors, reg_prediction = knn( reg_data, reg_query, k=3, distancce_fn=euclidean_distance, choice_fn=mean )
 
-print("_____________________")
-print("Original Dataset")
-for asdf in dataset:
-    print(asdf)
-print("_____________________")
-
-
-row0 = dataset[0] # row 0
-print("_____________________")
-print("Row 0", row0)
-print("_____________________")
+    here
 
 
-# for row_asdf in dataset: # for each 'ROW --'
-#     distance = euclidean_distance(row0, row_asdf)   # calculating the "straight line distance"
-#     print(distance) # printing the "stright line distance" of row0 to ALL other rows, including row0 to row0
-
-
-## Section, stuff to show Dr.Shi
-def showDrshi():
-    # change dataset[0] to dataset[5]
-
-    prediction = predict_classification(dataset, dataset[0], 3)
-    print('Expected "type" (in original dataset) %d, Got (calculated prediction) %d.' % (dataset[0][-1], prediction) )
-    
-showDrshi()
-
-
-# Make a 'prediction' with KNN on Iris Dataset    
-filename = 'iris.csv'    
-load_csv(filename)
-
-for i in range( len(dataset[0])-1 ):    # >> length of dataset[0] - 1 is 2 | range(2) >> value 0,1
-    # print(i)
-    # convert class colum to floats
-    str_column_to_float(dataset, i)
-
-
-# convert class colum to integers
-af1 = str_column_to_int(dataset, len(dataset[0])-1 )
-print("lookup dictionary", af1)
-
-# evaluate algorithm
-n_folds = 5
-num_neighbors = 5
-
-evaluate_algorithm(dataset, k_nearest_neightbors, n_folds, num_neighbors)
-print('Scores: %s' % scores )
-print('Mean Acccuracy: %.3f%%' % (sum(scores)/float(len(scores))) )
-
-
-
+if __name__ == '__main__':
+    main()
