@@ -54,7 +54,7 @@ def knn(data, query, k, distance_fn, choice_fn):
 
     # debug
     print("\n\n") 
-    print("k_nearest_labels", k_nearest_labels)
+    print("data[i][0], k_nearest_labels", k_nearest_labels)
 
     # for distance, i in k_nearest_distances_and_indices:
     #     print("\n\n")

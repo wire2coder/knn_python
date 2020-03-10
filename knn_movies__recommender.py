@@ -51,7 +51,7 @@ def recommend_movies(movie_query, k_recommendations):
     print("type movies_recommendation_data", type(movies_recommendation_data) )    
 
     # use KNN algorithm to get '5 similar movies' to 'query_movie'
-    recommendation_indices, _ = knn(
+    recommendation_indices, jim = knn(
         movies_recommendation_data, movie_query, k=k_recommendations,
         distance_fn=euclidean_distance, choice_fn=lambda x: None
     )
@@ -65,13 +65,12 @@ def recommend_movies(movie_query, k_recommendations):
 
         # debug
         print("\n\n")
-        print("_, index", index)
-
+        print("_", _)
+        print("index", index)
+        
         movie_recommendations.append(raw_movies_data[index])
     
-        print("\n\n")
-        print("_, index", index)
-
+    
     # debug
     print("\n\n")
     print("movie_recommendations", movie_recommendations)
@@ -91,7 +90,8 @@ def main():
     # print the 5 'movie titles'
     for recommendation in recommended_movies:
         print("\n")
-        print("recommendation (2nd column)", recommendation[1])
+        print("recommendation", recommendation)
+        # print("recommendation (2nd column)", recommendation[1])
 
 # run the 'main' function
 if __name__ == '__main__':
