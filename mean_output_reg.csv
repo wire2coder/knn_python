@@ -1,0 +1,83 @@
+('query', [60])
+('example[:-1]', [65.75])
+('sum_squared_distance', 33.0625)
+('distance', 5.75)
+('index for distance', 0)
+
+
+
+('query', [60])
+('example[:-1]', [71.52])
+('sum_squared_distance', 132.7103999999999)
+('distance', 11.519999999999996)
+('index for distance', 1)
+
+
+
+('query', [60])
+('example[:-1]', [69.4])
+('sum_squared_distance', 88.36000000000011)
+('distance', 9.400000000000006)
+('index for distance', 2)
+
+
+
+('query', [60])
+('example[:-1]', [68.22])
+('sum_squared_distance', 67.56839999999998)
+('distance', 8.219999999999999)
+('index for distance', 3)
+
+
+
+('query', [60])
+('example[:-1]', [67.79])
+('sum_squared_distance', 60.6841000000001)
+('distance', 7.790000000000006)
+('index for distance', 4)
+
+
+
+('query', [60])
+('example[:-1]', [68.7])
+('sum_squared_distance', 75.69000000000005)
+('distance', 8.700000000000003)
+('index for distance', 5)
+
+
+
+('query', [60])
+('example[:-1]', [69.8])
+('sum_squared_distance', 96.03999999999995)
+('distance', 9.799999999999997)
+('index for distance', 6)
+
+
+
+('query', [60])
+('example[:-1]', [70.01])
+('sum_squared_distance', 100.2001000000001)
+('distance', 10.010000000000005)
+('index for distance', 7)
+
+
+
+('query', [60])
+('example[:-1]', [67.9])
+('sum_squared_distance', 62.41000000000009)
+('distance', 7.900000000000006)
+('index for distance', 8)
+
+
+
+('query', [60])
+('example[:-1]', [66.49])
+('sum_squared_distance', 42.12009999999994)
+('distance', 6.489999999999995)
+('index for distance', 9)
+
+
+ >>
+('reg_k_nearest_neighbors', [(5.75, 0), (6.489999999999995, 9), (7.790000000000006, 4)])
+('reg_prediction', 128.24666666666667)
+>>

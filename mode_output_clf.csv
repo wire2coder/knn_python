@@ -1,0 +1,84 @@
+
+('query', [33])
+('example[:-1]', [22])
+('sum_squared_distance', 121.0)
+('distance', 11.0)
+('index for distance', 0)
+
+
+
+('query', [33])
+('example[:-1]', [23])
+('sum_squared_distance', 100.0)
+('distance', 10.0)
+('index for distance', 1)
+
+
+
+('query', [33])
+('example[:-1]', [21])
+('sum_squared_distance', 144.0)
+('distance', 12.0)
+('index for distance', 2)
+
+
+
+('query', [33])
+('example[:-1]', [18])
+('sum_squared_distance', 225.0)
+('distance', 15.0)
+('index for distance', 3)
+
+
+
+('query', [33])
+('example[:-1]', [19])
+('sum_squared_distance', 196.0)
+('distance', 14.0)
+('index for distance', 4)
+
+
+
+('query', [33])
+('example[:-1]', [25])
+('sum_squared_distance', 64.0)
+('distance', 8.0)
+('index for distance', 5)
+
+
+
+('query', [33])
+('example[:-1]', [27])
+('sum_squared_distance', 36.0)
+('distance', 6.0)
+('index for distance', 6)
+
+
+
+('query', [33])
+('example[:-1]', [29])
+('sum_squared_distance', 16.0)
+('distance', 4.0)
+('index for distance', 7)
+
+
+
+('query', [33])
+('example[:-1]', [31])
+('sum_squared_distance', 4.0)
+('distance', 2.0)
+('index for distance', 8)
+
+
+
+('query', [33])
+('example[:-1]', [45])
+('sum_squared_distance', 144.0)
+('distance', 12.0)
+('index for distance', 9)
+
+
+ >>
+('clf_k_nearest_neighbors', [(2.0, 8), (4.0, 7), (6.0, 6)])
+('clf_prediction', 0)
+>>
